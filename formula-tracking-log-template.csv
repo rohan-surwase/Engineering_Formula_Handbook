@@ -1,0 +1,16 @@
+Date Added,Day #,Category File,Category Name,Formula Name,Formula ID (slug),Equation,Added To File?,Notes
+,1,electrical.js,Electrical Engineering,Ohm's Law,ohms-law,V = I × R,Yes,Ships with repo
+,1,electrical.js,Electrical Engineering,Electrical Power,electrical-power,P = V × I,Yes,Ships with repo
+,1,electrical.js,Electrical Engineering,Total Resistance — Series Circuit,series-resistance,R_total = R1 + R2 + ... + Rn,Yes,Ships with repo
+,1,electrical.js,Electrical Engineering,Total Resistance — Two Resistors in Parallel,parallel-resistance-two,R_total = (R1 × R2) / (R1 + R2),Yes,Ships with repo
+,1,electrical.js,Electrical Engineering,Capacitive Reactance,capacitive-reactance,Xc = 1 / (2πfC),Yes,Ships with repo
+,1,electrical.js,Electrical Engineering,Inductive Reactance,inductive-reactance,XL = 2πfL,Yes,Ships with repo
+,1,electrical.js,Electrical Engineering,LC Resonant Frequency,lc-resonant-frequency,f = 1 / (2π√(LC)),Yes,Ships with repo
+,1,electrical.js,Electrical Engineering,Series RLC Circuit Impedance,series-rlc-impedance,Z = √(R² + (XL − Xc)²),Yes,Ships with repo
+,1,electrical.js,Electrical Engineering,Voltage Divider Rule,voltage-divider,Vout = Vin × (R2 / (R1 + R2)),Yes,Ships with repo
+,1,electrical.js,Electrical Engineering,Energy Stored in a Capacitor,capacitor-energy,E = ½ × C × V²,Yes,Ships with repo
+,2,electronics.js,Electronics,,,,No,
+,2,electronics.js,Electronics,,,,No,
+,2,electronics.js,Electronics,,,,No,
+,2,electronics.js,Electronics,,,,No,
+,2,electronics.js,Electronics,,,,No,

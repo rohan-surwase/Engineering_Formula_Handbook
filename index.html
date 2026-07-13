@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Engineering Formula Handbook</title>
+<meta name="description" content="A searchable, modular reference of engineering formulas — Engineer's Workspace" />
+
+<!-- Favicons — see assets/icons/ and README.md "Favicon" section to regenerate -->
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="assets/icons/favicon-48x48.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<meta name="theme-color" content="#0A1929">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root{
+  --font-display:'Space Grotesk', sans-serif;
+  --font-body:'Inter', sans-serif;
+  --font-mono:'JetBrains Mono', monospace;
+
+  --radius-sm:3px;
+  --radius-md:6px;
+  --header-h:64px;
+  --titleblock-h:34px;
+  --sidebar-w:264px;
+
+  --shadow-card:0 1px 2px rgba(0,0,0,.35), 0 8px 24px -12px rgba(0,0,0,.5);
+  --transition-fast:150ms cubic-bezier(.4,0,.2,1);
+  --transition-med:280ms cubic-bezier(.4,0,.2,1);
+}
+
+[data-theme="dark"]{
+  --bg:#0A1929;
+  --bg-grid:rgba(79,195,247,.055);
+  --bg-grid-strong:rgba(79,195,247,.09);
+  --surface:#0F2540;
+  --surface-alt:#122C4D;
+  --surface-raised:#16324F;
+  --border:#1E3A5F;
+  --border-soft:#16273D;
+  --accent:#4FC3F7;
+  --accent-dim:#2E6D8E;
+  --accent-amber:#F2A93B;
+  --accent-amber-dim:#8A6323;
+  --text-primary:#E8F1F8;
+  --text-secondary:#8FADC7;
+  --text-tertiary:#5D7A93;
+  --danger:#F27059;
+  --success:#5FC98D;
+  --overlay:rgba(5,14,26,.72);
+  --scrollbar:#25405F;
+}
+
+[data-theme="light"]{
+  --bg:#F3EFE3;
+  --bg-grid:rgba(29,92,138,.07);
+  --bg-grid-strong:rgba(29,92,138,.12);
+  --surface:#FBF8F0;
+  --surface-alt:#F3EDDD;
+  --surface-raised:#FFFFFF;
+  --border:#CBBFA0;
+  --border-soft:#DCD2B8;
+  --accent:#1D5C8A;
+  --accent-dim:#8FB4CC;
+  --accent-amber:#B5661E;
+  --accent-amber-dim:#E4C89A;
+  --text-primary:#1B2530;
+  --text-secondary:#4E5D6B;
+  --text-tertiary:#7C8A96;
+  --danger:#B8412C;
+  --success:#2F7A50;
+  --overlay:rgba(40,34,20,.45);
+  --scrollbar:#D4C9AC;
+}
+
+*,*::before,*::after{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{
+  margin:0;
+  background:
+    linear-gradient(var(--bg-grid) 1px, transparent 1px) 0 0 / 28px 28px,
+    linear-gradient(90deg, var(--bg-grid) 1px, transparent 1px) 0 0 / 28px 28px,
+    linear-gradient(var(--bg-grid-strong) 1px, transparent 1px) 0 0 / 140px 140px,
+    linear-gradient(90deg, var(--bg-grid-strong) 1px, transparent 1px) 0 0 / 140px 140px,
+    var(--bg);
+  color:var(--text-primary);
+  font-family:var(--font-body);
+  min-height:100vh;
+  transition:background-color var(--transition-med), color var(--transition-med);
+}
+::selection{ background:var(--accent); color:var(--bg); }
+::-webkit-scrollbar{ width:10px; height:10px; }
+::-webkit-scrollbar-track{ background:transparent; }
+::-webkit-scrollbar-thumb{ background:var(--scrollbar); border-radius:6px; }
+
+h1,h2,h3,h4{ font-family:var(--font-display); margin:0; letter-spacing:.01em; }
+button{ font-family:inherit; }
+a{ color:inherit; }
+
+.mono{ font-family:var(--font-mono); }
+
+/* ============================================================
+   LAYOUT SHELL
+   ============================================================ */
+.app-header{
+  position:sticky; top:0; z-index:40;
+  height:var(--header-h);
+  display:flex; align-items:center; gap:16px;
+  padding:0 20px;
+  background:color-mix(in srgb, var(--surface) 92%, transparent);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+}
+
+.brand-block{ display:flex; align-items:center; gap:10px; flex-shrink:0; }
+.brand-mark{
+  width:34px; height:34px; border-radius:var(--radius-sm);
+  border:1.5px solid var(--accent);
+  display:flex; align-items:center; justify-content:center;
+  color:var(--accent); font-family:var(--font-mono); font-weight:600; font-size:15px;
+  position:relative;
+}
+.brand-mark::after{
+  content:""; position:absolute; inset:4px;
+  border:1px solid var(--accent); opacity:.4; border-radius:2px;
+}
+.brand-text h1{ font-size:15px; color:var(--text-primary); line-height:1.1; white-space:nowrap; }
+.brand-text span{ font-size:10.5px; color:var(--text-tertiary); text-transform:uppercase; letter-spacing:.14em; }
+
+.home-btn{
+  display:flex; align-items:center; gap:6px;
+  padding:8px 12px;
+  border:1px solid var(--border); border-radius:var(--radius-sm);
+  background:transparent; color:var(--text-secondary);
+  font-size:12.5px; cursor:pointer; text-decoration:none;
+  transition:border-color var(--transition-fast), color var(--transition-fast), background var(--transition-fast);
+  flex-shrink:0;
+}
+.home-btn:hover{ border-color:var(--accent); color:var(--accent); background:var(--surface-alt); }
+
+.search-shell{
+  flex:1; max-width:560px; position:relative;
+  display:flex; align-items:center;
+}
+.search-shell svg{ position:absolute; left:12px; width:15px; height:15px; color:var(--text-tertiary); pointer-events:none; }
+#search-input{
+  width:100%;
+  padding:9px 34px 9px 34px;
+  background:var(--surface-alt);
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  color:var(--text-primary);
+  font-size:13px;
+  font-family:var(--font-body);
+  outline:none;
+  transition:border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+#search-input:focus{ border-color:var(--accent); box-shadow:0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent); }
+#search-input::placeholder{ color:var(--text-tertiary); }
+.search-clear{
+  position:absolute; right:8px; background:none; border:none; color:var(--text-tertiary);
+  cursor:pointer; padding:4px; display:none; border-radius:3px;
+}
+.search-clear.visible{ display:flex; }
+.search-clear:hover{ color:var(--accent); }
+
+.header-actions{ display:flex; align-items:center; gap:8px; margin-left:auto; flex-shrink:0; }
+.icon-btn{
+  width:36px; height:36px;
+  border:1px solid var(--border); border-radius:var(--radius-sm);
+  background:transparent; color:var(--text-secondary);
+  display:flex; align-items:center; justify-content:center; cursor:pointer;
+  transition:border-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast), background var(--transition-fast);
+}
+.icon-btn:hover{ border-color:var(--accent); color:var(--accent); }
+.icon-btn:active{ transform:scale(.92); }
+.icon-btn svg{ width:16px; height:16px; }
+.sidebar-toggle{ display:none; }
+
+/* title block strip — drafting-sheet signature element */
+.titleblock{
+  position:sticky; top:var(--header-h); z-index:39;
+  height:var(--titleblock-h);
+  display:flex; align-items:center;
+  border-bottom:1px solid var(--border);
+  background:var(--surface);
+  font-family:var(--font-mono);
+  font-size:10.5px;
+  color:var(--text-tertiary);
+  letter-spacing:.04em;
+  overflow-x:auto;
+  white-space:nowrap;
+}
+.titleblock .tb-cell{
+  padding:0 14px; height:100%;
+  display:flex; align-items:center; gap:6px;
+  border-right:1px solid var(--border-soft);
+}
+.titleblock .tb-cell:last-child{ border-right:none; }
+.titleblock .tb-label{ color:var(--text-tertiary); opacity:.75; }
+.titleblock .tb-value{ color:var(--accent); font-weight:500; }
+
+.app-body{ display:flex; align-items:flex-start; max-width:1440px; margin:0 auto; }
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+.sidebar{
+  width:var(--sidebar-w); flex-shrink:0;
+  position:sticky; top:calc(var(--header-h) + var(--titleblock-h));
+  height:calc(100vh - var(--header-h) - var(--titleblock-h));
+  overflow-y:auto;
+  padding:18px 14px 40px;
+  border-right:1px solid var(--border);
+}
+.sidebar-section{ margin-bottom:22px; }
+.sidebar-heading{
+  font-size:10.5px; text-transform:uppercase; letter-spacing:.14em;
+  color:var(--text-tertiary); font-family:var(--font-mono);
+  padding:0 8px 8px; display:flex; align-items:center; justify-content:space-between;
+}
+.nav-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px; }
+.nav-item{
+  display:flex; align-items:center; gap:9px;
+  padding:8px 9px; border-radius:var(--radius-sm);
+  cursor:pointer; color:var(--text-secondary); font-size:13px;
+  border:1px solid transparent;
+  transition:background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+}
+.nav-item:hover{ background:var(--surface-alt); color:var(--text-primary); }
+.nav-item.active{
+  background:var(--surface-alt); color:var(--accent);
+  border-color:var(--accent-dim);
+}
+.nav-icon{ width:15px; text-align:center; flex-shrink:0; font-size:13px; }
+.nav-label{ flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.nav-count{
+  font-family:var(--font-mono); font-size:10.5px; color:var(--text-tertiary);
+  background:var(--surface); border:1px solid var(--border-soft);
+  padding:1px 6px; border-radius:8px; flex-shrink:0;
+}
+.nav-item.active .nav-count{ color:var(--accent); border-color:var(--accent-dim); }
+
+.recent-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px; }
+.recent-item{
+  padding:7px 9px; border-radius:var(--radius-sm); cursor:pointer;
+  font-size:12px; color:var(--text-secondary);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  transition:background var(--transition-fast), color var(--transition-fast);
+}
+.recent-item:hover{ background:var(--surface-alt); color:var(--accent); }
+.empty-note{ font-size:11.5px; color:var(--text-tertiary); padding:6px 9px; line-height:1.5; }
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+.content{ flex:1; min-width:0; padding:22px 26px 60px; }
+
+.content-header{
+  display:flex; align-items:baseline; justify-content:space-between; gap:12px;
+  margin-bottom:16px; flex-wrap:wrap;
+}
+.content-title{ font-size:19px; color:var(--text-primary); }
+.content-title .accent{ color:var(--accent); }
+.result-count{ font-size:12px; color:var(--text-tertiary); font-family:var(--font-mono); }
+
+.card-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(340px, 1fr));
+  gap:16px;
+}
+
+.formula-card{
+  position:relative;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  padding:18px 18px 16px;
+  box-shadow:var(--shadow-card);
+  animation:card-in var(--transition-med) both;
+  transition:border-color var(--transition-fast), transform var(--transition-fast);
+}
+.formula-card:hover{ border-color:var(--accent-dim); transform:translateY(-2px); }
+@keyframes card-in{
+  from{ opacity:0; transform:translateY(8px); }
+  to{ opacity:1; transform:translateY(0); }
+}
+/* drafting corner marks — signature detail */
+.formula-card::before, .formula-card::after,
+.formula-card .corner-br, .formula-card .corner-bl{
+  content:""; position:absolute; width:9px; height:9px;
+  border-color:var(--accent-dim); opacity:.7; pointer-events:none;
+}
+.formula-card::before{ top:6px; left:6px; border-top:1.5px solid; border-left:1.5px solid; }
+.formula-card::after{ top:6px; right:6px; border-top:1.5px solid; border-right:1.5px solid; }
+.formula-card .corner-bl{ bottom:6px; left:6px; border-bottom:1.5px solid; border-left:1.5px solid; }
+.formula-card .corner-br{ bottom:6px; right:6px; border-bottom:1.5px solid; border-right:1.5px solid; }
+
+.card-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:10px; }
+.card-titles{ min-width:0; }
+.card-category{
+  font-family:var(--font-mono); font-size:10px; text-transform:uppercase; letter-spacing:.1em;
+  color:var(--accent); opacity:.85; margin-bottom:3px; display:flex; align-items:center; gap:5px;
+}
+.card-name{ font-size:15.5px; color:var(--text-primary); font-family:var(--font-display); font-weight:600; }
+
+.card-star{
+  background:none; border:none; cursor:pointer; color:var(--text-tertiary);
+  flex-shrink:0; padding:2px; transition:color var(--transition-fast), transform var(--transition-fast);
+}
+.card-star:hover{ transform:scale(1.15); }
+.card-star svg{ width:18px; height:18px; }
+.card-star.active{ color:var(--accent-amber); }
+
+.equation-box{
+  font-family:var(--font-mono); font-size:15px; color:var(--text-primary);
+  background:var(--surface-alt); border:1px solid var(--border-soft); border-left:3px solid var(--accent);
+  border-radius:var(--radius-sm); padding:12px 14px; margin-bottom:12px;
+  overflow-x:auto; letter-spacing:.02em;
+}
+
+.var-table{ width:100%; border-collapse:collapse; margin-bottom:12px; font-size:12px; }
+.var-table tr{ border-bottom:1px solid var(--border-soft); }
+.var-table tr:last-child{ border-bottom:none; }
+.var-table td{ padding:5px 4px; vertical-align:top; }
+.var-symbol{ font-family:var(--font-mono); color:var(--accent); width:52px; font-weight:600; }
+.var-meaning{ color:var(--text-secondary); }
+.var-unit{ font-family:var(--font-mono); color:var(--text-tertiary); text-align:right; white-space:nowrap; padding-left:8px; }
+
+.card-desc{ font-size:12.8px; color:var(--text-secondary); line-height:1.55; margin-bottom:12px; }
+
+.card-field-label{
+  font-family:var(--font-mono); font-size:10px; text-transform:uppercase; letter-spacing:.1em;
+  color:var(--text-tertiary); margin-bottom:5px;
+}
+.chip-list{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px; }
+.chip{
+  font-size:11px; padding:4px 9px; border-radius:20px;
+  background:var(--surface-alt); border:1px solid var(--border-soft); color:var(--text-secondary);
+}
+
+.notes-callout{
+  font-size:12px; color:var(--text-secondary); line-height:1.55;
+  background:color-mix(in srgb, var(--accent-amber) 8%, transparent);
+  border:1px dashed var(--accent-amber-dim);
+  border-radius:var(--radius-sm); padding:10px 12px; margin-bottom:14px;
+  position:relative;
+}
+.notes-callout .card-field-label{ color:var(--accent-amber); opacity:.9; margin-bottom:4px; }
+
+.units-line{
+  display:flex; align-items:center; gap:6px; font-size:11.5px; color:var(--text-tertiary);
+  margin-bottom:14px; font-family:var(--font-mono);
+}
+.units-line .accent{ color:var(--accent); }
+
+.card-actions{ display:flex; gap:8px; padding-top:12px; border-top:1px solid var(--border-soft); }
+.card-action-btn{
+  flex:1; display:flex; align-items:center; justify-content:center; gap:6px;
+  padding:8px 6px; border-radius:var(--radius-sm); border:1px solid var(--border);
+  background:transparent; color:var(--text-secondary); font-size:11.5px; cursor:pointer;
+  transition:border-color var(--transition-fast), color var(--transition-fast), background var(--transition-fast);
+}
+.card-action-btn:hover{ border-color:var(--accent); color:var(--accent); background:var(--surface-alt); }
+.card-action-btn svg{ width:13px; height:13px; flex-shrink:0; }
+.card-action-btn.copied{ color:var(--success); border-color:var(--success); }
+
+.keyword-ghost{ display:none; }
+
+/* empty state */
+.empty-state{
+  grid-column:1/-1; text-align:center; padding:60px 20px; color:var(--text-tertiary);
+}
+.empty-state h3{ color:var(--text-secondary); font-size:16px; margin-bottom:8px; }
+.empty-state p{ font-size:13px; max-width:360px; margin:0 auto; line-height:1.6; }
+.empty-state svg{ width:40px; height:40px; margin-bottom:14px; opacity:.5; }
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+#toast{
+  position:fixed; bottom:22px; left:50%; transform:translateX(-50%) translateY(20px);
+  background:var(--surface-raised); border:1px solid var(--accent-dim); color:var(--text-primary);
+  padding:10px 18px; border-radius:var(--radius-sm); font-size:12.5px;
+  box-shadow:var(--shadow-card); opacity:0; pointer-events:none; z-index:100;
+  transition:opacity var(--transition-fast), transform var(--transition-fast);
+  display:flex; align-items:center; gap:8px;
+}
+#toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+#toast svg{ width:14px; height:14px; color:var(--success); flex-shrink:0; }
+
+/* ============================================================
+   MOBILE / RESPONSIVE
+   ============================================================ */
+.sidebar-backdrop{ display:none; }
+
+@media (max-width: 860px){
+  :root{ --sidebar-w:250px; }
+  .sidebar-toggle{ display:flex; }
+  .brand-text span{ display:none; }
+  .search-shell{ order:3; flex-basis:100%; max-width:none; }
+  .app-header{ flex-wrap:wrap; height:auto; padding:10px 14px; row-gap:8px; }
+  .titleblock{ top:auto; position:sticky; top:0; }
+  .sidebar{
+    position:fixed; top:0; left:0; height:100vh; z-index:60;
+    background:var(--bg); transform:translateX(-100%);
+    transition:transform var(--transition-med); width:min(80vw, 300px);
+    padding-top:16px; box-shadow:0 0 40px rgba(0,0,0,.4);
+  }
+  .sidebar.open{ transform:translateX(0); }
+  .sidebar-backdrop{
+    display:block; position:fixed; inset:0; background:var(--overlay);
+    z-index:55; opacity:0; pointer-events:none; transition:opacity var(--transition-med);
+  }
+  .sidebar-backdrop.open{ opacity:1; pointer-events:auto; }
+  .content{ padding:18px 14px 50px; }
+  .card-grid{ grid-template-columns:1fr; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration:.01ms !important; transition-duration:.01ms !important; scroll-behavior:auto !important; }
+}
+
+/* ============================================================
+   PRINT
+   ============================================================ */
+#print-area{ display:none; }
+@media print{
+  .app-header, .titleblock, .sidebar, .sidebar-backdrop, #toast, .card-actions{ display:none !important; }
+  body{ background:#fff !important; }
+  .app-body{ display:block !important; }
+  .content{ padding:0 !important; }
+  #print-area{
+    display:block !important; color:#111; font-family:var(--font-body);
+  }
+  #print-area h2{ font-family:var(--font-display); margin-bottom:4px; }
+  #print-area .equation-box{ background:#f2f2f2; border-left:3px solid #333; color:#111; }
+  .card-grid, .content-header{ display:none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     HEADER
+     ============================================================ -->
+<header class="app-header">
+  <button class="icon-btn sidebar-toggle" id="sidebar-toggle" aria-label="Toggle category menu" title="Categories">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+
+  <!-- This file is the repo's own homepage. Point href at your parent
+       workspace/portfolio site (or delete this button) once you have one. -->
+  <a href="#" class="home-btn" title="Back to Engineer's Workspace">
+    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Workspace
+  </a>
+
+  <div class="brand-block">
+    <div class="brand-mark">Σ</div>
+    <div class="brand-text">
+      <h1>Engineering Formula Handbook</h1>
+      <span>Modular reference · Engineer's Workspace</span>
+    </div>
+  </div>
+
+  <div class="search-shell">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input id="search-input" type="text" placeholder="Search formulas, variables, keywords…" autocomplete="off" />
+    <button class="search-clear" id="search-clear" aria-label="Clear search">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+
+  <div class="header-actions">
+    <button class="icon-btn" id="print-btn" title="Print current view">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    </button>
+    <button class="icon-btn" id="theme-toggle" title="Toggle dark / light mode">
+      <svg id="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- title block strip — drafting-sheet metadata -->
+<div class="titleblock">
+  <div class="tb-cell"><span class="tb-label">SHEET</span><span class="tb-value" id="tb-sheet">—</span></div>
+  <div class="tb-cell"><span class="tb-label">SCALE</span><span class="tb-value">NTS</span></div>
+  <div class="tb-cell"><span class="tb-label">CATEGORIES LOADED</span><span class="tb-value" id="tb-categories">0</span></div>
+  <div class="tb-cell"><span class="tb-label">TOTAL FORMULAS</span><span class="tb-value" id="tb-total">0</span></div>
+  <div class="tb-cell"><span class="tb-label">REV</span><span class="tb-value" id="tb-date">—</span></div>
+  <div class="tb-cell"><span class="tb-label">DRAWN BY</span><span class="tb-value">FormulaManager.js</span></div>
+</div>
+
+<div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+<div class="app-body">
+  <!-- ============================================================
+       SIDEBAR
+       ============================================================ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-heading">Library</div>
+      <ul class="nav-list" id="view-list">
+        <li class="nav-item active" data-view="all" data-category="all">
+          <span class="nav-icon">▦</span><span class="nav-label">All Formulas</span><span class="nav-count" id="count-all">0</span>
+        </li>
+        <li class="nav-item" data-view="favorites">
+          <span class="nav-icon">★</span><span class="nav-label">Favorites</span><span class="nav-count" id="count-favorites">0</span>
+        </li>
+        <li class="nav-item" data-view="recent">
+          <span class="nav-icon">◷</span><span class="nav-label">Recently Viewed</span><span class="nav-count" id="count-recent">0</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-heading">Categories</div>
+      <ul class="nav-list" id="category-list"><!-- populated by FormulaManager --></ul>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-heading">Recently Viewed<span></span></div>
+      <ul class="recent-list" id="recent-list">
+        <li class="empty-note">Formulas you open will show up here for quick access.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <!-- ============================================================
+       MAIN CONTENT
+       ============================================================ -->
+  <main class="content">
+    <div class="content-header">
+      <h2 class="content-title" id="content-title">All <span class="accent">Formulas</span></h2>
+      <span class="result-count" id="result-count">0 results</span>
+    </div>
+    <div class="card-grid" id="card-grid"><!-- populated by FormulaManager --></div>
+  </main>
+</div>
+
+<div id="print-area"></div>
+
+<div id="toast">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="toast-message">Copied</span>
+</div>
+
+<!-- ============================================================
+     CATEGORY AUTO-DISCOVERY
+     index.html itself never lists category files. It loads
+     formulas/manifest.js, which lists the category ids to load, and the
+     app script below injects the matching <script src="formulas/{id}.js">
+     tags at runtime. Add a category by creating its file and adding one
+     line to formulas/manifest.js — this file never needs to change.
+     See README.md → "Adding a New Formula" for the full workflow.
+     ============================================================ -->
+<script defer src="formulas/manifest.js"></script>
+
+<!-- ============================================================
+     APPLICATION ENGINE
+     ============================================================ -->
+<script defer>
+/**
+ * FormulaManager
+ * ----------------
+ * The single class responsible for the entire handbook's behavior:
+ * loading category data, rendering cards, search/filtering, bookmarks,
+ * recently-viewed tracking, theme, and header statistics.
+ *
+ * It knows nothing about any specific formula — it only reads whatever
+ * category files have registered themselves on window.FormulaHandbook.
+ */
+class FormulaManager {
+  constructor() {
+    // Category display order comes straight from formulas/manifest.js —
+    // the manifest is the single source of truth for which categories
+    // exist and what order they appear in. Nothing in this class needs
+    // to change when a category is added, removed, or reordered.
+    this.categoryOrder = window.FORMULA_MANIFEST || [];
+
+    this.formulas = [];          // flattened list across all loaded categories
+    this.categories = [];        // [{id, name, icon, count}]
+    this.activeView = "all";     // 'all' | 'favorites' | 'recent'
+    this.activeCategory = "all";
+    this.searchTerm = "";
+
+    this.favorites = this.loadJSON("efh_favorites", []);
+    this.recent = this.loadJSON("efh_recent", []);
+    this.theme = localStorage.getItem("efh_theme") || this.preferredTheme();
+
+    this.els = {};
+  }
+
+  /* ---------------------------------------------------------- storage */
+  loadJSON(key, fallback) {
+    try {
+      const raw = localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : fallback;
+    } catch (e) { return fallback; }
+  }
+  saveJSON(key, value) {
+    try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) { /* storage unavailable */ }
+  }
+  preferredTheme() {
+    return window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  }
+
+  /* ---------------------------------------------------------- boot */
+  init() {
+    this.cacheEls();
+    this.loadFormulas();
+    this.applyTheme(this.theme, false);
+    this.bindEvents();
+    this.renderSidebar();
+    this.renderStats();
+    this.render();
+  }
+
+  cacheEls() {
+    this.els = {
+      grid: document.getElementById("card-grid"),
+      searchInput: document.getElementById("search-input"),
+      searchClear: document.getElementById("search-clear"),
+      contentTitle: document.getElementById("content-title"),
+      resultCount: document.getElementById("result-count"),
+      categoryList: document.getElementById("category-list"),
+      viewList: document.getElementById("view-list"),
+      recentList: document.getElementById("recent-list"),
+      countAll: document.getElementById("count-all"),
+      countFavorites: document.getElementById("count-favorites"),
+      countRecent: document.getElementById("count-recent"),
+      tbSheet: document.getElementById("tb-sheet"),
+      tbCategories: document.getElementById("tb-categories"),
+      tbTotal: document.getElementById("tb-total"),
+      tbDate: document.getElementById("tb-date"),
+      themeToggle: document.getElementById("theme-toggle"),
+      themeIcon: document.getElementById("theme-icon"),
+      printBtn: document.getElementById("print-btn"),
+      sidebar: document.getElementById("sidebar"),
+      sidebarToggle: document.getElementById("sidebar-toggle"),
+      sidebarBackdrop: document.getElementById("sidebar-backdrop"),
+      toast: document.getElementById("toast"),
+      toastMessage: document.getElementById("toast-message"),
+      printArea: document.getElementById("print-area"),
+    };
+  }
+
+  /* ---------------------------------------------------------- data loading */
+  loadFormulas() {
+    const registry = (window.FormulaHandbook && window.FormulaHandbook.categories) || {};
+    const orderedIds = [
+      ...this.categoryOrder.filter((id) => registry[id]),
+      ...Object.keys(registry).filter((id) => !this.categoryOrder.includes(id)),
+    ];
+
+    this.categories = orderedIds.map((id) => {
+      const cat = registry[id];
+      return { id: cat.id, name: cat.name, icon: cat.icon || "▪", count: cat.formulas.length };
+    });
+
+    this.formulas = orderedIds.flatMap((id) => {
+      const cat = registry[id];
+      return cat.formulas.map((f) => ({
+        ...f,
+        uid: `${cat.id}::${f.id}`,
+        categoryId: cat.id,
+        categoryName: cat.name,
+        categoryIcon: cat.icon || "▪",
+      }));
+    });
+  }
+
+  /* ---------------------------------------------------------- rendering: sidebar */
+  renderSidebar() {
+    this.els.categoryList.innerHTML = this.categories.map((cat) => `
+      <li class="nav-item" data-view="all" data-category="${cat.id}">
+        <span class="nav-icon">${cat.icon}</span>
+        <span class="nav-label">${this.escape(cat.name)}</span>
+        <span class="nav-count">${cat.count}</span>
+      </li>
+    `).join("") || `<li class="empty-note">Add files to /formulas to populate categories.</li>`;
+
+    this.renderRecent();
+  }
+
+  renderRecent() {
+    if (!this.recent.length) {
+      this.els.recentList.innerHTML = `<li class="empty-note">Formulas you open will show up here for quick access.</li>`;
+      return;
+    }
+    const items = this.recent
+      .map((uid) => this.formulas.find((f) => f.uid === uid))
+      .filter(Boolean)
+      .slice(0, 8);
+
+    this.els.recentList.innerHTML = items.map((f) => `
+      <li class="recent-item" data-jump="${f.uid}" title="${this.escape(f.name)}">${this.escape(f.name)}</li>
+    `).join("") || `<li class="empty-note">Formulas you open will show up here for quick access.</li>`;
+  }
+
+  renderStats() {
+    this.els.tbCategories.textContent = this.categories.length;
+    this.els.tbTotal.textContent = this.formulas.length;
+    this.els.tbDate.textContent = new Date().toISOString().slice(0, 10);
+  }
+
+  /* ---------------------------------------------------------- filtering + search */
+  getFiltered() {
+    let list = this.formulas;
+
+    if (this.activeView === "favorites") {
+      list = list.filter((f) => this.favorites.includes(f.uid));
+    } else if (this.activeView === "recent") {
+      const order = this.recent;
+      list = list.filter((f) => order.includes(f.uid))
+                 .sort((a, b) => order.indexOf(a.uid) - order.indexOf(b.uid));
+    } else if (this.activeCategory !== "all") {
+      list = list.filter((f) => f.categoryId === this.activeCategory);
+    }
+
+    const term = this.searchTerm.trim().toLowerCase();
+    if (term) {
+      list = list.filter((f) => this.matchesSearch(f, term));
+    }
+    return list;
+  }
+
+  matchesSearch(formula, term) {
+    const haystacks = [
+      formula.name,
+      formula.equation,
+      formula.categoryName,
+      ...(formula.keywords || []),
+      ...(formula.variables || []).flatMap((v) => [v.symbol, v.meaning, v.unit]),
+    ];
+    return haystacks.some((h) => h && String(h).toLowerCase().includes(term));
+  }
+
+  /* ---------------------------------------------------------- rendering: cards */
+  render() {
+    const list = this.getFiltered();
+    this.updateHeaderLabel(list.length);
+    this.els.tbSheet.textContent = `${list.length} / ${this.formulas.length}`;
+
+    if (!list.length) {
+      this.els.grid.innerHTML = this.emptyStateHTML();
+      return;
+    }
+
+    this.els.grid.innerHTML = list.map((f, i) => this.cardHTML(f, i)).join("");
+  }
+
+  updateHeaderLabel(count) {
+    let label = "All <span class=\"accent\">Formulas</span>";
+    if (this.activeView === "favorites") label = "★ <span class=\"accent\">Favorites</span>";
+    else if (this.activeView === "recent") label = "◷ <span class=\"accent\">Recently Viewed</span>";
+    else if (this.activeCategory !== "all") {
+      const cat = this.categories.find((c) => c.id === this.activeCategory);
+      if (cat) label = `${cat.icon} <span class="accent">${this.escape(cat.name)}</span>`;
+    }
+    this.els.contentTitle.innerHTML = label;
+    this.els.resultCount.textContent = `${count} result${count === 1 ? "" : "s"}`;
+  }
+
+  emptyStateHTML() {
+    const msg = this.searchTerm
+      ? `No formulas match "<strong>${this.escape(this.searchTerm)}</strong>". Try a different term.`
+      : this.activeView === "favorites"
+        ? "Bookmark formulas with the star icon and they'll collect here."
+        : this.activeView === "recent"
+          ? "Open a formula card and it will appear here for quick return visits."
+          : "This category has no formulas yet — add entries to its file in /formulas.";
+    return `
+      <div class="empty-state">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <h3>Nothing here yet</h3>
+        <p>${msg}</p>
+      </div>`;
+  }
+
+  cardHTML(f, index) {
+    const isFav = this.favorites.includes(f.uid);
+    const varsRows = (f.variables || []).map((v) => `
+      <tr>
+        <td class="var-symbol">${this.escape(v.symbol)}</td>
+        <td class="var-meaning">${this.escape(v.meaning)}</td>
+        <td class="var-unit">${this.escape(v.unit || "")}</td>
+      </tr>`).join("");
+
+    const appChips = (f.applications || []).map((a) => `<span class="chip">${this.escape(a)}</span>`).join("");
+    const keywordGhost = (f.keywords || []).join(" ");
+
+    return `
+      <article class="formula-card" style="animation-delay:${Math.min(index * 25, 250)}ms" data-uid="${f.uid}">
+        <span class="corner-bl"></span><span class="corner-br"></span>
+        <div class="card-top">
+          <div class="card-titles">
+            <div class="card-category">${f.categoryIcon} ${this.escape(f.categoryName)}</div>
+            <div class="card-name">${this.escape(f.name)}</div>
+          </div>
+          <button class="card-star ${isFav ? "active" : ""}" data-action="favorite" data-uid="${f.uid}" title="${isFav ? "Remove bookmark" : "Bookmark this formula"}">
+            <svg viewBox="0 0 24 24" fill="${isFav ? "currentColor" : "none"}" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </button>
+        </div>
+
+        <div class="equation-box mono">${this.escape(f.equation)}</div>
+
+        <table class="var-table">${varsRows}</table>
+
+        <div class="units-line"><span class="card-field-label" style="margin:0;">Result units:</span> <span class="accent mono">${this.escape(f.units || "—")}</span></div>
+
+        <p class="card-desc">${this.escape(f.description)}</p>
+
+        ${appChips ? `<div class="card-field-label">Applications</div><div class="chip-list">${appChips}</div>` : ""}
+
+        ${f.notes ? `<div class="notes-callout"><div class="card-field-label">Engineer's Note</div>${this.escape(f.notes)}</div>` : ""}
+
+        <span class="keyword-ghost" hidden>${this.escape(keywordGhost)}</span>
+
+        <div class="card-actions">
+          <button class="card-action-btn" data-action="copy" data-uid="${f.uid}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy
+          </button>
+          <button class="card-action-btn" data-action="print" data-uid="${f.uid}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Print
+          </button>
+        </div>
+      </article>`;
+  }
+
+  escape(str) {
+    if (str === undefined || str === null) return "";
+    return String(str)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;");
+  }
+
+  /* ---------------------------------------------------------- counts + nav state */
+  refreshCounts() {
+    this.els.countAll.textContent = this.formulas.length;
+    this.els.countFavorites.textContent = this.favorites.length;
+    this.els.countRecent.textContent = this.recent.length;
+  }
+
+  setActiveNav(view, categoryId) {
+    document.querySelectorAll(".nav-item").forEach((el) => el.classList.remove("active"));
+    let selector;
+    if (view === "all" && categoryId && categoryId !== "all") {
+      selector = `.nav-item[data-category="${categoryId}"]`;
+    } else {
+      selector = `.nav-item[data-view="${view}"]`;
+    }
+    const target = document.querySelector(selector);
+    if (target) target.classList.add("active");
+  }
+
+  /* ---------------------------------------------------------- interactions */
+  toggleFavorite(uid) {
+    const idx = this.favorites.indexOf(uid);
+    if (idx > -1) { this.favorites.splice(idx, 1); }
+    else { this.favorites.push(uid); }
+    this.saveJSON("efh_favorites", this.favorites);
+    this.refreshCounts();
+
+    const star = document.querySelector(`.card-star[data-uid="${CSS.escape(uid)}"]`);
+    if (star) {
+      const nowActive = this.favorites.includes(uid);
+      star.classList.toggle("active", nowActive);
+      star.querySelector("svg").setAttribute("fill", nowActive ? "currentColor" : "none");
+    }
+    if (this.activeView === "favorites") this.render();
+    this.showToast(this.favorites.includes(uid) ? "Added to favorites" : "Removed from favorites");
+  }
+
+  trackRecent(uid) {
+    this.recent = [uid, ...this.recent.filter((id) => id !== uid)].slice(0, 20);
+    this.saveJSON("efh_recent", this.recent);
+    this.refreshCounts();
+    this.renderRecent();
+  }
+
+  copyFormula(uid) {
+    const f = this.formulas.find((x) => x.uid === uid);
+    if (!f) return;
+    const text = [
+      f.name,
+      f.equation,
+      "",
+      "Variables:",
+      ...(f.variables || []).map((v) => `  ${v.symbol} — ${v.meaning} (${v.unit || "—"})`),
+      "",
+      `Units: ${f.units || "—"}`,
+      `Description: ${f.description || ""}`,
+      f.notes ? `Note: ${f.notes}` : "",
+    ].filter(Boolean).join("\n");
+
+    const finish = () => {
+      this.showToast("Formula copied to clipboard");
+      const btn = document.querySelector(`.card-action-btn[data-action="copy"][data-uid="${CSS.escape(uid)}"]`);
+      if (btn) {
+        btn.classList.add("copied");
+        setTimeout(() => btn.classList.remove("copied"), 1200);
+      }
+    };
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(finish).catch(() => this.fallbackCopy(text, finish));
+    } else {
+      this.fallbackCopy(text, finish);
+    }
+    this.trackRecent(uid);
+  }
+
+  fallbackCopy(text, done) {
+    const ta = document.createElement("textarea");
+    ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); } catch (e) { /* no-op */ }
+    document.body.removeChild(ta);
+    done();
+  }
+
+  printFormula(uid) {
+    const f = this.formulas.find((x) => x.uid === uid);
+    if (!f) return;
+    const varsRows = (f.variables || []).map((v) => `
+      <tr><td style="padding:4px 8px;font-family:monospace;">${this.escape(v.symbol)}</td>
+          <td style="padding:4px 8px;">${this.escape(v.meaning)}</td>
+          <td style="padding:4px 8px;font-family:monospace;">${this.escape(v.unit || "")}</td></tr>`).join("");
+
+    this.els.printArea.innerHTML = `
+      <div style="max-width:640px;">
+        <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#555;">${this.escape(f.categoryName)}</div>
+        <h2>${this.escape(f.name)}</h2>
+        <div class="equation-box" style="margin:12px 0;">${this.escape(f.equation)}</div>
+        <table style="width:100%;border-collapse:collapse;margin-bottom:12px;">${varsRows}</table>
+        <p><strong>Units:</strong> ${this.escape(f.units || "—")}</p>
+        <p>${this.escape(f.description || "")}</p>
+        ${f.applications && f.applications.length ? `<p><strong>Applications:</strong> ${f.applications.map(a=>this.escape(a)).join(", ")}</p>` : ""}
+        ${f.notes ? `<p><strong>Engineer's Note:</strong> ${this.escape(f.notes)}</p>` : ""}
+      </div>`;
+    this.trackRecent(uid);
+    window.print();
+  }
+
+  printCurrentView() {
+    const list = this.getFiltered();
+    this.els.printArea.innerHTML = list.map((f) => `
+      <div style="max-width:640px;margin-bottom:26px;page-break-inside:avoid;">
+        <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#555;">${this.escape(f.categoryName)}</div>
+        <h2>${this.escape(f.name)}</h2>
+        <div class="equation-box" style="margin:10px 0;">${this.escape(f.equation)}</div>
+        <p>${this.escape(f.description || "")}</p>
+      </div>`).join("");
+    window.print();
+  }
+
+  showToast(message) {
+    this.els.toastMessage.textContent = message;
+    this.els.toast.classList.add("show");
+    clearTimeout(this._toastTimer);
+    this._toastTimer = setTimeout(() => this.els.toast.classList.remove("show"), 2200);
+  }
+
+  /* ---------------------------------------------------------- theme */
+  applyTheme(theme, persist = true) {
+    this.theme = theme;
+    document.documentElement.setAttribute("data-theme", theme);
+    this.els.themeIcon.innerHTML = theme === "dark"
+      ? `<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>`
+      : `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>`;
+    if (persist) this.saveJSON("efh_theme", theme);
+    localStorage.setItem("efh_theme", theme);
+  }
+
+  /* ---------------------------------------------------------- events */
+  bindEvents() {
+    this.refreshCounts();
+
+    this.els.searchInput.addEventListener("input", (e) => {
+      this.searchTerm = e.target.value;
+      this.els.searchClear.classList.toggle("visible", !!this.searchTerm);
+      this.render();
+    });
+    this.els.searchClear.addEventListener("click", () => {
+      this.searchTerm = "";
+      this.els.searchInput.value = "";
+      this.els.searchClear.classList.remove("visible");
+      this.els.searchInput.focus();
+      this.render();
+    });
+
+    // sidebar nav (views + categories), delegated
+    [this.els.viewList, this.els.categoryList].forEach((list) => {
+      list.addEventListener("click", (e) => {
+        const item = e.target.closest(".nav-item");
+        if (!item) return;
+        const view = item.dataset.view;
+        const category = item.dataset.category;
+        if (view === "favorites" || view === "recent") {
+          this.activeView = view;
+          this.activeCategory = "all";
+        } else {
+          this.activeView = "all";
+          this.activeCategory = category || "all";
+        }
+        this.setActiveNav(this.activeView, this.activeCategory);
+        this.render();
+        this.closeSidebarOnMobile();
+      });
+    });
+
+    // recently viewed jump list
+    this.els.recentList.addEventListener("click", (e) => {
+      const item = e.target.closest(".recent-item");
+      if (!item) return;
+      this.activeView = "all";
+      this.activeCategory = "all";
+      this.searchTerm = "";
+      this.els.searchInput.value = "";
+      this.setActiveNav("all", "all");
+      this.render();
+      requestAnimationFrame(() => {
+        const card = document.querySelector(`.formula-card[data-uid="${CSS.escape(item.dataset.jump)}"]`);
+        if (card) { card.scrollIntoView({ behavior: "smooth", block: "center" }); card.style.borderColor = "var(--accent)"; }
+      });
+    });
+
+    // card actions, delegated
+    this.els.grid.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-action]");
+      if (!btn) return;
+      const uid = btn.dataset.uid;
+      const action = btn.dataset.action;
+      if (action === "favorite") this.toggleFavorite(uid);
+      if (action === "copy") this.copyFormula(uid);
+      if (action === "print") this.printFormula(uid);
+    });
+    // track a view whenever a card is opened/clicked (not on button clicks)
+    this.els.grid.addEventListener("click", (e) => {
+      const card = e.target.closest(".formula-card");
+      if (card && !e.target.closest("[data-action]")) this.trackRecent(card.dataset.uid);
+    });
+
+    this.els.themeToggle.addEventListener("click", () => {
+      this.applyTheme(this.theme === "dark" ? "light" : "dark");
+    });
+
+    this.els.printBtn.addEventListener("click", () => this.printCurrentView());
+
+    this.els.sidebarToggle.addEventListener("click", () => this.openSidebarOnMobile());
+    this.els.sidebarBackdrop.addEventListener("click", () => this.closeSidebarOnMobile());
+
+    document.addEventListener("keydown", (e) => {
+      if ((e.key === "/" || (e.ctrlKey && e.key.toLowerCase() === "k")) && document.activeElement !== this.els.searchInput) {
+        e.preventDefault();
+        this.els.searchInput.focus();
+      }
+      if (e.key === "Escape") this.closeSidebarOnMobile();
+    });
+  }
+
+  openSidebarOnMobile() {
+    this.els.sidebar.classList.add("open");
+    this.els.sidebarBackdrop.classList.add("open");
+  }
+  closeSidebarOnMobile() {
+    this.els.sidebar.classList.remove("open");
+    this.els.sidebarBackdrop.classList.remove("open");
+  }
+}
+
+/**
+ * loadCategoryScript / loadAllCategories
+ * ----------------------------------------
+ * The auto-discovery loader. Reads window.FORMULA_MANIFEST (set by
+ * formulas/manifest.js) and injects a <script> tag for each category id.
+ * A category file that doesn't exist yet (e.g. you added its id to the
+ * manifest before creating the file) simply fails to load and is skipped
+ * — it never blocks the rest of the handbook from rendering.
+ */
+function loadCategoryScript(id) {
+  return new Promise((resolve) => {
+    const script = document.createElement("script");
+    script.src = `formulas/${id}.js`;
+    script.onload = () => resolve({ id, ok: true });
+    script.onerror = () => {
+      console.warn(`[FormulaManager] Could not load "formulas/${id}.js" — check formulas/manifest.js and the filename.`);
+      resolve({ id, ok: false });
+    };
+    document.head.appendChild(script);
+  });
+}
+
+async function loadAllCategories() {
+  const manifest = window.FORMULA_MANIFEST || [];
+  if (!manifest.length) {
+    console.warn("[FormulaManager] formulas/manifest.js is empty or missing — no categories to load.");
+  }
+  await Promise.all(manifest.map(loadCategoryScript));
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  await loadAllCategories();
+  const manager = new FormulaManager();
+  manager.init();
+  window.formulaManager = manager; // exposed for debugging / future extension
+});
+</script>
+</body>
+</html>
